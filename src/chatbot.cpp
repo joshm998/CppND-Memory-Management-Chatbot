@@ -21,7 +21,7 @@ ChatBot::ChatBot()
 ChatBot::ChatBot(std::string filename)
 {
     std::cout << "ChatBot Constructor" << std::endl;
-    
+
     // invalidate data handles
     _chatLogic = nullptr;
     _rootNode = nullptr;
@@ -35,7 +35,7 @@ ChatBot::~ChatBot()
     std::cout << "ChatBot Destructor" << std::endl;
 
     // deallocate heap memory
-    if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
+    if (_image != NULL) // Attention: wxWidgets used NULL and not nullptr
     {
         delete _image;
         _image = NULL;
@@ -44,7 +44,53 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+ChatBot::ChatBot(const ChatBot &src)
+{
+    ChatBot::_image = new wxBitmap();
+    *ChatBot::_image = *src._image;
+    std::cout << "ChatBot Copy Constructor";
+}
 
+ChatBot &ChatBot::operator=(const ChatBot &src)
+{
+    if (this == &src)
+        return *this;
+
+    if (ChatBot::_image != NULL)
+    {
+        delete ChatBot::_image;
+        ChatBot::_image = NULL;
+    }
+    ChatBot::_image = new wxBitmap();
+    *ChatBot::_image = *src._image;
+    std::cout << "ChatBot Copy Assignment Operator";
+    return *this;
+}
+
+ChatBot::ChatBot(ChatBot &&src)
+{
+    ChatBot::_image = src._image;
+    src._image = NULL;
+    std::cout << "ChatBot Move Constructor";
+}
+
+ChatBot &ChatBot::operator=(ChatBot &&src)
+{
+    if (this == &src)
+        return *this;
+
+    if (ChatBot::_image != NULL)
+    {
+        delete ChatBot::_image;
+        ChatBot::_image = NULL;
+    }
+
+    ChatBot::_image = src._image;
+    src._image = NULL;
+
+    std::cout << "ChatBot Move Assignment Operator";
+    return *this;
+}
 ////
 //// EOF STUDENT CODE
 
