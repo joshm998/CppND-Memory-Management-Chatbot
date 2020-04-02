@@ -12,7 +12,7 @@
 ChatBot::ChatBot()
 {
     // invalidate data handles
-    _image = nullptr;
+    _image = NULL;
     _chatLogic = nullptr;
     _rootNode = nullptr;
 }
@@ -20,8 +20,9 @@ ChatBot::ChatBot()
 // constructor WITH memory allocation
 ChatBot::ChatBot(std::string filename)
 {
-    std::cout << "ChatBot Constructor" << std::endl;
+    std::cout << filename;
 
+    std::cout << "ChatBot Constructor" << std::endl;
     // invalidate data handles
     _chatLogic = nullptr;
     _rootNode = nullptr;
@@ -61,35 +62,52 @@ ChatBot &ChatBot::operator=(const ChatBot &src)
         delete ChatBot::_image;
         ChatBot::_image = NULL;
     }
+    _chatLogic = src._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
     ChatBot::_image = new wxBitmap();
     *ChatBot::_image = *src._image;
     std::cout << "ChatBot Copy Assignment Operator";
     return *this;
 }
 
-ChatBot::ChatBot(ChatBot &&src)
-{
-    ChatBot::_image = src._image;
-    src._image = NULL;
-    std::cout << "ChatBot Move Constructor";
+ChatBot::ChatBot(ChatBot &&src) {
+  std::cout << "ChatBot Move Constructor" << std::endl;
+  _currentNode = src._currentNode;
+  src._currentNode = nullptr;
+
+  _image = src._image;
+  src._image = NULL;
+
+  _chatLogic = src._chatLogic;
+  // Keep chat logic handle pointing at correct location
+  _chatLogic->SetChatbotHandle(this);
+  src._chatLogic = nullptr;
+
+  _rootNode = src._rootNode;
+  src._rootNode = nullptr;
+
 }
 
-ChatBot &ChatBot::operator=(ChatBot &&src)
-{
-    if (this == &src)
-        return *this;
-
-    if (ChatBot::_image != NULL)
-    {
-        delete ChatBot::_image;
-        ChatBot::_image = NULL;
-    }
-
-    ChatBot::_image = src._image;
-    src._image = NULL;
-
-    std::cout << "ChatBot Move Assignment Operator";
+ChatBot &ChatBot::operator=(ChatBot &&src) {
+  if (&src == this) {
     return *this;
+  }
+
+  std::cout << "ChatBot Move Assignment Operator" << std::endl;
+  _currentNode = src._currentNode;
+  src._currentNode = nullptr;
+
+  _image = src._image;
+  src._image = NULL;
+
+  _chatLogic = src._chatLogic;
+  // Keep chat logic handle pointing at correct location
+  _chatLogic->SetChatbotHandle(this);
+  src._chatLogic = nullptr;
+
+  _rootNode = src._rootNode;
+  src._rootNode = nullptr;
+  return *this;
 }
 ////
 //// EOF STUDENT CODE
